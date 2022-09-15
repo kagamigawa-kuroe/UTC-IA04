@@ -8,9 +8,6 @@ import (
 	"sort"
 )
 
-// IsPalindrome("RADAR") // true
-// IsPalindrome("AGENT") // false
-
 func IsPalindrome(word string) bool{
 	for i := 0; i < len(word)/2; i++ {
 		if word[i] != word[len(word)-1-i]{
@@ -40,7 +37,8 @@ func Footprint(s string) (footprint string){
 
 func Anagrams(words []string) (anagrams map[string][]string){
 	for i:= range words{
-		anagrams[Footprint(words[i])] = append(anagrams[Footprint(words[i])],words[i])
+		a := anagrams[Footprint(words[i])]
+		a = append(a,words[i])
 	}
 	return anagrams
 }
@@ -48,17 +46,24 @@ func Anagrams(words []string) (anagrams map[string][]string){
 func DictFromFile(filename string) (dict []string){
 	var all []string
 
-	fi, _:= os.Open(filename)
+	fi, err:= os.Open(filename)
 	br := bufio.NewReader(fi)
-	fmt.Println("read start")
+
+	if err!=nil{
+		fmt.Println(err) //打开文件错误
+		return 
+	}
+
+	// fmt.Println("read start")
     for {
         a, _, c := br.ReadLine()
         if c == io.EOF {
             break
         }
+		// fmt.Println(string(a))
         all = append(all,string(a))
     }
-	fmt.Println("read end")
+	// fmt.Println("read end")
 	var anagrams map[string][]string = Anagrams(all)
 	var words []string = Palindromes(all)
 
@@ -77,13 +82,13 @@ func DictFromFile(filename string) (dict []string){
 
 	/// AGENT
 	for i,j := range anagrams{
-		if(i=="AEGNT"){
+		if(i=="AGENT"){
 			fmt.Println("the AGENT HAS:")
 			fmt.Println(j)
+			fmt.Println("-----------------------")
 		}
 	}
-	fmt.Println("-----------------------")
-
+	
 	var max_v string = Footprint(all[0])
 	/// LONGEST anagram
 	for i,j := range anagrams{
@@ -96,5 +101,4 @@ func DictFromFile(filename string) (dict []string){
 	fmt.Println("-----------------------")
 
 	return all
-
 }

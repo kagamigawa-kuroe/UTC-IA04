@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 	"mymodule/mypackage"
+
+	// 包名和路径名保持一致
+	"mymodule/package2"
 )
 
 func test(){
@@ -14,18 +17,12 @@ func test(){
 	t := mypackage.ValeursCentrales(sl)
 	fmt.Println("-----------")
 	fmt.Println(t)
-	
-	fmt.Println("-----------")
-	fmt.Println("-----------")
-
 	mypackage.Plus1(sl)
     fmt.Println(sl)
     fmt.Println("-----------")
 
 	// var m []int = []int{1,2,3,4,5} 
-
     mypackage.Compte(1,sl)
-
 }
 
 func test_Palindromes(){
@@ -35,13 +32,14 @@ func test_Palindromes(){
 }
 
 func test_file(){
-	mypackage.DictFromFile("file.txt")
+	mypackage.DictFromFile("/Users/whz/utc/2022.automne/IA04/code/tp1/mypackage/file.txt")
 }
 
 func main() {
-	// test()
+	package2.PrintHello2()
+	test()
 	// test_Palindromes()
-	test_file()
+	// test_file()
 }
 
 

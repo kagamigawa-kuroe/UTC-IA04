@@ -20,6 +20,7 @@ func Test(){
 		go add()
 	}
 	time.Sleep(2*time.Second)
+	fmt.Println("----")
 	fmt.Println(count)
 }
 
@@ -41,6 +42,7 @@ func Test_WaitGroup(){
 	a.Add(2)
 
 	go wait()
+
 	time.Sleep(2*time.Second)
 	go wait()
 

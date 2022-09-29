@@ -1,6 +1,8 @@
 package comsoc
 
-import "errors"
+import (
+	"errors"
+)
 
 /// 候选人
 type Alternative int
@@ -49,12 +51,14 @@ func maxCount(count Count) (bestAlts []Alternative){
 
 // vérifie le profil donné, par ex. qu'ils sont tous complets et que chaque alternative n'apparaît qu'une seule fois par préférences
 func checkProfile(prefs Profile) error {
+
 	if len(prefs) == 0 {
 		return errors.New("Le profile list est NULL!")
 	}
 
 	/// 判读所有的长度是否一致
 	length := len(prefs[0])
+
 	for i := 0; i < len(prefs); i++ {
 		if len(prefs[i]) != length {
 			return errors.New("Profils ne sont pas tous complets!")
@@ -64,7 +68,7 @@ func checkProfile(prefs Profile) error {
 	/// 对于每个投票者 判断有无重复的成员
 	for i := 0; i < len(prefs); i++ {
 		set := make(map[Alternative]bool)
-		for j := 0; i < len(prefs[0]); j++ {
+		for j := 0; j < length; j++ {
 			if set[prefs[i][j]] == false {
 				set[prefs[i][j]] = true
 			}else {
@@ -72,6 +76,7 @@ func checkProfile(prefs Profile) error {
 			}
 		}
 	}
+
 	return nil
 }
 

@@ -8,8 +8,8 @@ func MajoritySWF(p Profile) (count Count, err error){
 
 	count = make(Count)
 
-	for i:= range p {
-		count[p[i][0]]++;
+	for i:=0; i < len(p); i++ {
+		count[p[i][0]]++
 	}
 
 	return count, err
@@ -17,7 +17,7 @@ func MajoritySWF(p Profile) (count Count, err error){
 
 func MajoritySCF(p Profile) (bestAlts []Alternative, err error){
 	count, e := MajoritySWF(p)
-	if e != nil {
+	if e == nil {
 		bestAlts = maxCount(count)
 	} else {
 		return nil, e
@@ -33,7 +33,7 @@ func BordaSWF(p Profile) (count Count, err error) {
 	count = make(Count)
 
 	for i := range p {
-		vote := len(p[0])
+		vote := len(p[0]) - 1
 		for j := range p[i] {
 			count[p[i][j]] = count[p[i][j]] + vote
 			vote--
@@ -44,18 +44,18 @@ func BordaSWF(p Profile) (count Count, err error) {
 
 func BordaSCF(p Profile) (bestAlts []Alternative, err error) {
 	count, e := BordaSWF(p)
-	if e != nil {
+	if e == nil {
 		bestAlts = maxCount(count)
+		return bestAlts, nil
 	} else {
 		return nil, e
 	}
-	return bestAlts, nil
 }
 
 func ApprovalSWF(p Profile, thresholds []int) (count Count, err error){
 	count = make(Count)
 	for i := range p {
-		for j := range p[i] {
+		for j := 0; j < thresholds[i]; j++ {
 			count[p[i][j]]++
 		}
 	}
@@ -64,7 +64,7 @@ func ApprovalSWF(p Profile, thresholds []int) (count Count, err error){
 
 func ApprovalSCF(p Profile, thresholds []int) (bestAlts []Alternative, err error){
 	count, e :=  ApprovalSWF(p,thresholds)
-	if e != nil {
+	if e == nil {
 		bestAlts = maxCount(count)
 	} else {
 		return nil, e

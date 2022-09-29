@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"ia04/agt"
+	"ia04/comsoc"
 )
 
 func TestAgt()  {
@@ -30,9 +31,17 @@ func TestAgt()  {
 }
 
 func TestCom() {
+	prefs := [][]comsoc.Alternative{
+		{1, 2, 3},
+		{1, 2, 3},
+		{3, 2, 1},
+	}
 
+	res, _ := comsoc.BordaSWF(prefs)
+	fmt.Println(res)
 }
 
 func main(){
-	TestAgt()
+	// TestAgt()
+	TestCom()
 }

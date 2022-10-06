@@ -192,3 +192,76 @@ func CondorcetWinner(p Profile) (bestAlts []Alternative, err error) {
 		return ans, nil
 	}
 }
+
+/// avance
+func CopelandSWF(p Profile) (Count, error) {
+	count := make(map[Alternative]int)
+	note := make([]Alternative,0)
+	for i := range p[0] {
+		note = append(note, p[0][i])
+	}
+
+	for i := 0; i < len(note); i++ {
+		for j := i + 1; j < len(note); j++ {
+			/// 比较note[i]和note[j]
+			a := 0
+			b := 0
+			for k := range p {
+				index_1 := -1
+				index_2 := -1
+				for t := range p[k] {
+					if p[k][t]==note[i] {
+						index_1 = t
+					}
+					if p[k][t]==note[j] {
+						index_2 = t
+					}
+				}
+				if index_1 < index_2 {
+					a++
+				} else if index_1 > index_2 {
+					b++
+				}
+			}
+			if a > b {
+				count[note[i]]++
+				/// 比起Condorcet 增加一个减的环节
+				count[note[j]]--
+			} else if b > a {
+				count[note[j]]++
+				count[note[i]]--
+			}
+		}
+	}
+	return count,nil
+}
+
+func CopelandSCF(p Profile) (bestAlts []Alternative, err error) {
+	count, err := CopelandSWF(p)
+	if err != nil {
+		return nil, err
+	}
+	ans := make([]Alternative,0)
+	max_v := -1
+	for _,j := range count{
+		if j > max_v {
+			max_v = j
+		}
+	}
+
+	for i,j := range count{
+		if j == max_v {
+			ans = append(ans, i)
+		}
+	}
+	return ans, nil
+}
+
+func STV_SWF(p Profile) (Count, error) {
+
+}
+
+func STV_SCF(p Profile) (bestAlts []Alternative, err error) {
+
+}
+

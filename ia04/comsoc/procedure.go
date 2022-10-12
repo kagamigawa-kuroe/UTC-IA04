@@ -1,6 +1,8 @@
 package comsoc
 
-import "errors"
+import (
+	"errors"
+)
 
 func MajoritySWF(p Profile) (count Count, err error){
 	err = checkProfile(p)
@@ -257,11 +259,59 @@ func CopelandSCF(p Profile) (bestAlts []Alternative, err error) {
 	return ans, nil
 }
 
-func STV_SWF(p Profile) (Count, error) {
+func STV_SWF(p Profile) (count Count, err error) {
+	err = checkProfile(p)
+	if err != nil {
+		return nil, err
+	}
+	count = make(Count)
 
+	/// delete un candidate dans P
+	del := func(data *Profile,a Alternative) {
+		for i:=0; i < len(*data); i++ {
+			j:=0
+			for ; (*data)[i][j] != a;j++ {}
+			k := j + 1
+			for ; k < len((*data)[i]); k++ {
+				(*data)[i][k-1] = (*data)[i][k]
+			}
+			(*data)[i][k-1] = -1
+		}
+	}
+	size := len(p[0])
+
+	for i := range p[0] {
+		count[p[0][i]] = 1
+	}
+
+	for i := 0; i < size-1; i++ {
+		var a Alternative = p[0][0]
+		m := make(map[Alternative]int)
+		for j := 0; j < len(p); j++ {
+			m[p[j][0]]++
+		}
+		for i,j := range m {
+			if j < m[a] {
+				a = i
+			}
+		}
+		count[a] = -1
+		del(&p,a)
+	}
+
+	return count, err
 }
 
 func STV_SCF(p Profile) (bestAlts []Alternative, err error) {
-
+	c,err := STV_SWF(p)
+	if err != nil {
+		return nil,err
+	}
+	for i,j := range c {
+		if j == 1 {
+			bestAlts = append(bestAlts, i)
+		}
+	}
+	return bestAlts,nil
 }
 

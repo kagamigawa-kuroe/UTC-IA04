@@ -67,7 +67,7 @@ func NewAgent(ID AgentID, name string, prefs []Alternative) *Agent {
 }
 
 func (a *Agent) Equal(ag AgentI) bool {
-	return a==ag;
+	return a==ag
 }
 
 func (a *Agent) DeepEqual(ag AgentI) bool {
@@ -82,18 +82,18 @@ func (a *Agent) Clone() AgentI {
 func (a *Agent) String() string {
 	s := "Agent:"
 	buf := bytes.NewBufferString(s)
-	fmt.Fprint(buf,a.ID)
-	fmt.Fprint(buf,", ID:" + a.Name + ", ")
-	fmt.Fprint(buf,"has preference: " )
+	_, _ = fmt.Fprint(buf, a.ID)
+	_, _ = fmt.Fprint(buf,", ID:" + a.Name + ", ")
+	_, _ = fmt.Fprint(buf,"has preference: " )
 	if len(a.Prefs) == 0{
-		fmt.Fprint(buf,"NULL" )
+		_, _ = fmt.Fprint(buf,"NULL" )
 		return buf.String()
 	}
-	fmt.Fprint(buf,a.Prefs[0])
+	_, _ = fmt.Fprint(buf,a.Prefs[0])
 
 	for i := 1; i < len(a.Prefs); i++ {
-		fmt.Fprint(buf," < ")
-		fmt.Fprint(buf,a.Prefs[i])
+		_, _ = fmt.Fprint(buf," < ")
+		_, _ = fmt.Fprint(buf,a.Prefs[i])
 	}
 
 	return buf.String()

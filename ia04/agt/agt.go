@@ -3,16 +3,16 @@ package agt
 import (
 	"bytes"
 	"fmt"
+	"ia04/comsoc"
 	"reflect"
 )
 
-type Alternative int
 type AgentID int
 
 type Agent struct {
 	ID    AgentID
 	Name  string
-	Prefs []Alternative
+	Prefs []comsoc.Alternative
 }
 
 type AgentI interface {
@@ -20,11 +20,11 @@ type AgentI interface {
 	DeepEqual(ag AgentI) bool
 	Clone() AgentI
 	String() string
-	Prefers(a Alternative, b Alternative)
+	Prefers(a comsoc.Alternative, b comsoc.Alternative)
 	Start()
 }
 
-func (a2 *Agent) Prefers(a Alternative, b Alternative) {
+func (a2 *Agent) Prefers(a comsoc.Alternative, b comsoc.Alternative) {
 	/// 先判断a与b是否已经在slice中
 	IndexA := -1
 	IndexB := -1
@@ -59,41 +59,42 @@ func (a2 *Agent) Prefers(a Alternative, b Alternative) {
 }
 
 func (a2 *Agent) Start() {
+	fmt.Println("start")
 	// panic("implement me")
 }
 
-func NewAgent(ID AgentID, name string, prefs []Alternative) *Agent {
+func NewAgent(ID AgentID, name string, prefs []comsoc.Alternative) *Agent {
 	return &Agent{ID: ID, Name: name, Prefs: prefs}
 }
 
-func (a *Agent) Equal(ag AgentI) bool {
-	return a==ag
+func (a2 *Agent) Equal(ag AgentI) bool {
+	return a2 ==ag
 }
 
-func (a *Agent) DeepEqual(ag AgentI) bool {
-	return reflect.DeepEqual(a,ag)
+func (a2 *Agent) DeepEqual(ag AgentI) bool {
+	return reflect.DeepEqual(a2,ag)
 }
 
-func (a *Agent) Clone() AgentI {
-	re :=  NewAgent(a.ID,a.Name,a.Prefs)
+func (a2 *Agent) Clone() AgentI {
+	re :=  NewAgent(a2.ID, a2.Name, a2.Prefs)
 	return re
 }
 
-func (a *Agent) String() string {
+func (a2 *Agent) String() string {
 	s := "Agent:"
 	buf := bytes.NewBufferString(s)
-	_, _ = fmt.Fprint(buf, a.ID)
-	_, _ = fmt.Fprint(buf,", ID:" + a.Name + ", ")
+	_, _ = fmt.Fprint(buf, a2.ID)
+	_, _ = fmt.Fprint(buf,", ID:" + a2.Name + ", ")
 	_, _ = fmt.Fprint(buf,"has preference: " )
-	if len(a.Prefs) == 0{
+	if len(a2.Prefs) == 0{
 		_, _ = fmt.Fprint(buf,"NULL" )
 		return buf.String()
 	}
-	_, _ = fmt.Fprint(buf,a.Prefs[0])
+	_, _ = fmt.Fprint(buf, a2.Prefs[0])
 
-	for i := 1; i < len(a.Prefs); i++ {
+	for i := 1; i < len(a2.Prefs); i++ {
 		_, _ = fmt.Fprint(buf," < ")
-		_, _ = fmt.Fprint(buf,a.Prefs[i])
+		_, _ = fmt.Fprint(buf, a2.Prefs[i])
 	}
 
 	return buf.String()

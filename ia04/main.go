@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"ia04/agt"
 	"ia04/comsoc"
+	"sync"
 )
 
 func TestAgt()  {
 	/// create
-	a := make([]agt.Alternative,0)
+	a := make([]comsoc.Alternative,0)
 	agant := agt.NewAgent(1,"test",a)
 
 	/// string
@@ -41,7 +42,29 @@ func TestCom() {
 	fmt.Println(res)
 }
 
+func test_demo(){
+	var a sync.Mutex
+	ag := agt.NewBureau(a,"localhost:8005",100,"server",nil,nil)
+	ag.Alts = make([]comsoc.Alternative,0)
+	ag.P = make([][]comsoc.Alternative,0)
+	go ag.Start()
+
+	fmt.Scanln()
+
+	agent := agt.NewAgent(101,"test",nil)
+	agent.Prefs = make([]comsoc.Alternative,0)
+	agent.Prefers(1,2)
+	agent.Prefers(3,5)
+	c := agt.NewVoteur(*agent,"http://localhost:8005")
+	fmt.Println(c.Prefs)
+	fmt.Scanln()
+	c.StartVote()
+
+	fmt.Scanln()
+
+	fmt.Println(c.RequestAnswer())
+}
+
 func main(){
-	// TestAgt()
-	TestCom()
+	test_demo()
 }

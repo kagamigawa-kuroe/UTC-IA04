@@ -84,7 +84,6 @@ func (b *Bureau) Start() {
 	go log.Fatal(s.ListenAndServe())
 }
 
-
 ///////////////////////////////////////////////////////
 
 type Voteur struct {

@@ -343,40 +343,39 @@ func Distance_edit_somme(a1 []Alternative, p Profile) (ans int, e error) {
 	return ans, nil
 }
 
+func permute(nums []Alternative) [][]Alternative {
+	var ans [][]Alternative
+	var dfs func(l []Alternative, temp []Alternative)
+	dfs = func(l []Alternative, temp []Alternative) {
+		if len(l) == 0 {
+			ans = append(ans, temp)
+		}
+		for i := 0; i < len(l); i++ {
+			n := append([]Alternative{}, l...)
+			dfs(append(n[:i], n[i+1:]...), append(temp, l[i]))
+		}
+	}
+	dfs(nums, []Alternative{})
+	return ans
+}
+
 func Kemeny(p Profile) (ans []Alternative, e error) {
 	e = checkProfile(p)
 	if e != nil {
 		return nil, e
 	}
-
-	permute := func(nums []Alternative) [][]Alternative {
-		var ans [][]Alternative
-		var dfs func(l []Alternative, temp []Alternative)
-		dfs = func(l []Alternative, temp []Alternative) {
-			if len(l) == 0 {
-				ans = append(ans, temp)
-			}
-			for i := 0; i < len(l); i++ {
-				n := append([]Alternative{}, l...)
-				dfs(append(n[:i], n[i+1:]...), append(temp, l[i]))
-			}
-		}
-		dfs(nums, []Alternative{})
-		return ans
-	}
-
 	// all alternative
-	all := make([]Alternative,0)
-	for i:= range p[0] {
-		all = append(all,p[0][i])
+	all := make([]Alternative, 0)
+	for i := range p[0] {
+		all = append(all, p[0][i])
 	}
 
 	ans = nil
 	min_distance := int(^uint(0) >> 1)
 	all_combination := permute(all)
 
-	for _,j:= range all_combination {
-		d,err := Distance_edit_somme(j,p)
+	for _, j := range all_combination {
+		d, err := Distance_edit_somme(j, p)
 		if err != nil {
 			e = err
 			return nil, e
@@ -390,4 +389,41 @@ func Kemeny(p Profile) (ans []Alternative, e error) {
 	return ans, nil
 }
 
+func possibleWinners_STV(p Profile) map[Alternative] []Alternative {
+	ans := make(map[Alternative] []Alternative)
+	a := make([]Alternative,0)
+	p = append(p,a)
+	// all alternative
+	all := make([]Alternative, 0)
+	for i := range p[0] {
+		all = append(all, p[0][i])
+	}
+
+	all_combination := permute(all)
+
+	for _, j := range all_combination {
+		p[len(p)-1] = j
+		re,_ := STV_SCF(p)
+		ans[re[0]] = j
+	}
+	return ans
+}
+
+func IsPossibleWinner_STV(P Profile, c Alternative) bool {
+	ans := possibleWinners_STV(P)
+	if ans[c] != nil {
+		return true
+	}
+	return false
+}
+
+func isNecessaryWinner(P Profile, c Alternative) bool {
+	ans := possibleWinners_STV(P)
+	for i,_ := range ans {
+		if i != c {
+			return false
+		}
+	}
+	return true
+}
 
